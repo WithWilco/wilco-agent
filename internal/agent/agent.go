@@ -146,9 +146,26 @@ func serveOnce(ctx context.Context, dialer *websocket.Dialer, cfg *config.Config
 				log.Printf("Ignoring malformed build job: %v", err)
 				continue
 			}
-			log.Printf("Received build job #%d (platform=%s, lane=%s)", job.BuildID, job.Platform, job.FastlaneLane)
+			log.Printf("Received build job #%d (platform=%s, lane=%s, scheme=%s)", job.BuildID, job.Platform, job.FastlaneLane, job.Scheme)
 			runJob(ctx, conn, cfg, job)
 			log.Printf("Build job #%d completed", job.BuildID)
+		case "list_schemes":
+			var req SchemeRequest
+			if err := json.Unmarshal(data, &req); err != nil {
+				log.Printf("Ignoring malformed scheme request: %v", err)
+				continue
+			}
+			log.Printf("Discovering Xcode schemes for %s @ %s", req.RepoURL, req.Branch)
+			schemes, err := discoverSchemes(ctx, req, cfg.WorkDir)
+			if err != nil {
+				log.Printf("Scheme discovery failed: %v", err)
+				schemes = []string{}
+			}
+			_ = conn.WriteJSON(map[string]any{
+				"type":       "schemes",
+				"request_id": req.RequestID,
+				"schemes":    schemes,
+			})
 		case "ping":
 			_ = conn.WriteJSON(map[string]any{"type": "pong"})
 		case "heartbeat_ack":

@@ -18,6 +18,10 @@ var (
 	laneRe     = regexp.MustCompile(`^[A-Za-z0-9_\-]{1,64}$`)
 	repoPathRe = regexp.MustCompile(`^[A-Za-z0-9._\-/]{1,200}$`)
 	sshRepoRe  = regexp.MustCompile(`^git@[A-Za-z0-9.\-]+:[A-Za-z0-9._\-/]+(\.git)?$`)
+	// Xcode scheme names allow spaces but nothing that could carry shell tricks.
+	// Commands are run as argv (no shell), so spaces are inert; this is defence
+	// in depth against a malformed/spoofed scheme value.
+	schemeRe = regexp.MustCompile(`^[A-Za-z0-9 ._\-]{1,128}$`)
 )
 
 func validateBranch(branch string) (string, error) {
@@ -32,6 +36,18 @@ func validateLane(lane string) (string, error) {
 		return "", fmt.Errorf("rejected unsafe fastlane lane: %q", lane)
 	}
 	return lane, nil
+}
+
+// validateScheme accepts a non-empty Xcode scheme name from the allowlist, or
+// "" (no scheme selected). Leading "-" is rejected so it can't pose as a flag.
+func validateScheme(scheme string) (string, error) {
+	if scheme == "" {
+		return "", nil
+	}
+	if strings.HasPrefix(scheme, "-") || !schemeRe.MatchString(scheme) {
+		return "", fmt.Errorf("rejected unsafe scheme name: %q", scheme)
+	}
+	return scheme, nil
 }
 
 // validateRepoURL accepts only https://host/path(.git) or git@host:path(.git)

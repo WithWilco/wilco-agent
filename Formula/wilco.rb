@@ -2,12 +2,12 @@ class Wilco < Formula
   desc "Wilco build agent — runs iOS builds for your Wilco account on your Mac"
   homepage "https://withwilco.com"
   # Point this at a published release tarball before distributing the tap, e.g.:
-  #   url "https://github.com/withwilco/wilco-agent/archive/refs/tags/v0.1.0.tar.gz"
+  #   url "https://github.com/withwilco/wilco-agent/archive/refs/tags/v0.2.0.tar.gz"
   #   sha256 "<shasum -a 256 of that tarball>"
-  url "https://github.com/withwilco/wilco-agent/archive/refs/tags/v0.1.0.tar.gz"
+  url "https://github.com/withwilco/wilco-agent/archive/refs/tags/v0.2.0.tar.gz"
   sha256 "fbe84ad8d3d3974977caf0ce778e7ef0401d2f1998ddd42743f42415def11c02"
   license "MIT"
-  version "0.1.0"
+  version "0.2.0"
 
   depends_on "go" => :build
   depends_on :macos

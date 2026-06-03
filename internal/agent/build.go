@@ -18,6 +18,7 @@ type Job struct {
 	Branch       string `json:"branch"`
 	Platform     string `json:"platform"`
 	FastlaneLane string `json:"fastlane_lane"`
+	Scheme       string `json:"scheme"`
 }
 
 type buildResult struct {
@@ -63,6 +64,12 @@ func runBuild(ctx context.Context, job Job, workDirRaw string, cleanup bool, sen
 		lane = "beta"
 	}
 	lane, err = validateLane(lane)
+	if err != nil {
+		sendLog(fmt.Sprintf("\n[agent] ERROR: %v\n", err))
+		res.exitCode = 1
+		return finalize(res, errorLines, "", cleanup, sendLog)
+	}
+	scheme, err := validateScheme(job.Scheme)
 	if err != nil {
 		sendLog(fmt.Sprintf("\n[agent] ERROR: %v\n", err))
 		res.exitCode = 1
@@ -118,7 +125,11 @@ func runBuild(ctx context.Context, job Job, workDirRaw string, cleanup bool, sen
 
 	// Run Fastlane.
 	sendLog(fmt.Sprintf("\n[agent] %s\n", strings.Repeat("─", 60)))
-	sendLog(fmt.Sprintf("[agent] Running: fastlane %s\n", lane))
+	if scheme != "" {
+		sendLog(fmt.Sprintf("[agent] Running: fastlane %s scheme:%s\n", lane, scheme))
+	} else {
+		sendLog(fmt.Sprintf("[agent] Running: fastlane %s\n", lane))
+	}
 	sendLog(fmt.Sprintf("[agent] %s\n\n", strings.Repeat("─", 60)))
 
 	flEnv := []string{
@@ -127,11 +138,17 @@ func runBuild(ctx context.Context, job Job, workDirRaw string, cleanup bool, sen
 		"FASTLANE_DISABLE_COLORS=1",
 		"CI=1",
 	}
+	// Expose the scheme both as a Fastfile parameter (options[:scheme]) and an
+	// env var (ENV["WILCO_SCHEME"]) so either style of Fastfile can pick it up.
 	var fastlaneArgv []string
 	if hasGemfile {
 		fastlaneArgv = []string{"bundle", "exec", "fastlane", lane}
 	} else {
 		fastlaneArgv = []string{"fastlane", lane}
+	}
+	if scheme != "" {
+		flEnv = append(flEnv, "WILCO_SCHEME="+scheme)
+		fastlaneArgv = append(fastlaneArgv, "scheme:"+scheme)
 	}
 	res.exitCode = runArgv(ctx, buildDir, flEnv, stream, fastlaneArgv...)
 
