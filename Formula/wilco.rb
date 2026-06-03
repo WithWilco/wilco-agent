@@ -1,10 +1,10 @@
 class Wilco < Formula
   desc "Wilco build agent — runs iOS builds for your Wilco account on your Mac"
   homepage "https://withwilco.com"
-  url "https://github.com/withwilco/wilco-agent/archive/refs/tags/v0.2.0.tar.gz"
-  sha256 "fc6d319afdef032fbc535df114f57b4ca4d09ca8f517aa5c7a553b4b29bc9fc3"
+  url "https://github.com/withwilco/wilco-agent/archive/refs/tags/v0.3.0.tar.gz"
+  sha256 "5a03f4a19889ac1e228291d5551e6fdc2ff39e44b4e05f8cda79dd26930a39b7"
   license "MIT"
-  version "0.2.0"
+  version "0.3.0"
 
   depends_on "go" => :build
   depends_on :macos
