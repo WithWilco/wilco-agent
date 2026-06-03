@@ -178,16 +178,56 @@ func firstNonEmpty(vals ...string) string {
 const successHTML = `<!doctype html>
 <html><head><meta charset="utf-8"><title>Wilco — connected</title>
 <style>
+ *{box-sizing:border-box}
  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-   background:#0f172a;color:#e2e8f0;display:flex;height:100vh;margin:0;
+   background:linear-gradient(to bottom,#020617,#0f172a,#020617);
+   color:#e2e8f0;display:flex;height:100vh;margin:0;
    align-items:center;justify-content:center}
  .card{text-align:center;max-width:420px;padding:40px}
- h1{font-size:22px;margin:16px 0 8px}
- p{color:#94a3b8;font-size:14px;line-height:1.5}
- .check{font-size:48px}
+ .connect-row{display:flex;align-items:center;justify-content:center;gap:20px;margin-bottom:24px}
+ .device{display:flex;flex-direction:column;align-items:center;gap:8px}
+ .device-icon{width:56px;height:56px;border-radius:14px;background:rgba(99,102,241,.12);display:flex;align-items:center;justify-content:center}
+ .device-icon svg{width:32px;height:32px;color:#818cf8}
+ .device-label{font-size:11px;color:#64748b;font-weight:500}
+ .dots{display:flex;align-items:center;gap:6px}
+ .dot{width:6px;height:6px;border-radius:50%;background:#22c55e}
+ .line{width:16px;height:2px;background:#22c55e;border-radius:1px}
+ .check-circle{width:20px;height:20px;border-radius:50%;background:#22c55e;display:flex;align-items:center;justify-content:center}
+ .check-circle svg{width:12px;height:12px;color:#fff}
+ h1{font-size:22px;margin:0 0 8px;font-weight:700;color:#f1f5f9}
+ p{color:#94a3b8;font-size:14px;line-height:1.6;margin:0}
 </style></head>
 <body><div class="card">
- <div class="check">✅</div>
+ <div class="connect-row">
+  <div class="device">
+   <div class="device-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+     <rect x="3" y="4" width="18" height="12" rx="2"/>
+     <path d="M2 20h20"/><path d="M8 20l1-4h6l1 4"/>
+     <line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="11" x2="10" y2="11"/>
+    </svg>
+   </div>
+   <span class="device-label">Your Mac</span>
+  </div>
+  <div class="dots">
+   <div class="dot"></div>
+   <div class="line"></div>
+   <div class="check-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+   <div class="line"></div>
+   <div class="dot"></div>
+  </div>
+  <div class="device">
+   <div class="device-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+     <rect x="2" y="2" width="20" height="8" rx="2"/>
+     <rect x="2" y="14" width="20" height="8" rx="2"/>
+     <circle cx="6" cy="6" r="1" fill="currentColor"/><circle cx="6" cy="18" r="1" fill="currentColor"/>
+     <line x1="10" y1="6" x2="18" y2="6"/><line x1="10" y1="18" x2="18" y2="18"/>
+    </svg>
+   </div>
+   <span class="device-label">Wilco</span>
+  </div>
+ </div>
  <h1>Your Mac is connected</h1>
  <p>You can close this tab and return to your terminal — the Wilco agent is ready.</p>
 </div></body></html>`

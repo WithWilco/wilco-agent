@@ -19,7 +19,7 @@ import (
 	"github.com/withwilco/wilco-agent/internal/service"
 )
 
-const version = "0.2.0"
+const version = "0.3.0"
 
 func main() {
 	args := os.Args[1:]
